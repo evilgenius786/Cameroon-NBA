@@ -1,0 +1,117 @@
+<html>
+	<head>
+	<p hidden>NotFoundPlayers</p>
+		<style>
+			table, th {
+			border: 1px solid black;
+			border-collapse: collapse;
+			font-size: 18px;
+			}
+			th { cursor: pointer; }
+			img { height: 25px; width: 25px}
+			#myTable {
+			border-collapse: collapse; /* Collapse borders */
+			width: 100%; /* Full-width */
+			border: 1px solid #ddd; /* Add a grey border */
+			}
+			td {
+			border: 1px solid black;
+			border-collapse: collapse;
+			font-size: 15px;
+			}
+			#myTable th, #myTable td {
+			text-align: center; /* Left-align text */
+			padding: 5px; /* Add padding */
+			}
+			#myTable tr {
+			/* Add a bottom border to all table rows */
+			border-bottom: 1px solid #ddd;
+			}
+			#myTable tr.header, #myTable tr:hover {
+			/* Add a grey background color to the table header and on hover */
+			background-color: #f1f1f1;
+			}
+		</style>
+		<script defer>
+			function myFunction() {
+			  var table, tr, td, i, txtValue;
+			  //event.target.style.backgroundColor="#7ED957";
+			  table = document.getElementById("myTable");
+			  src=event.srcElement;
+			  txt= src.textContent || src.innerText;
+			  if(txt=="") txt = src.parentElement.textContent || src.parentElement.innerText;
+			  console.log(txt)
+			  tr = table.getElementsByTagName("tr");
+			  for (i = 1; i < tr.length; i++) {
+				td = tr[i];
+				if (td) {
+				  txtValue = td.textContent || td.innerText;
+				  if (txtValue.indexOf(txt) > -1  || txt == "All") {
+					tr[i].style.display = ""
+				  }
+				  else {
+					tr[i].style.display = "none";
+				  }
+				}
+			  }
+			}
+			let ORDERED = false;
+			function sortTable(n) {
+			  const nodes = document.querySelectorAll("#myTable tr");
+				const arr = Array.from(nodes);
+				arr.splice(0, 1);
+				let sorted= arr.map(node => ({
+				  node,
+				  value: node.querySelectorAll("td")[n].innerHTML
+				}))
+				.sort((a, b) => (a.value > b.value) ? 1 : -1);
+				 if(n==5 || n == 9 || n == 10 || n == 11){
+				 sorted = arr.map(node => ({
+				 node,
+				 value: parseFloat(node.querySelectorAll("td")[n].innerHTML)
+				}))
+				.sort((a, b) => (a.value > b.value) ? 1 : -1);
+				}
+				if(ORDERED) {
+				   sorted = sorted.reverse();
+				   ORDERED = false;
+				}
+				else ORDERED = true;
+				// Get table node to append elements to
+				const table = document.querySelector("#myTable");
+				sorted.forEach(({
+				 node
+				}) => table.appendChild(node));
+			}
+			sortTable(9);
+		</script>
+	</head>
+	<body>
+		<br>
+		{btn}
+		<br>
+		<p>Last Refreshed: <b>LastRefreshed</b></p>
+		<table id="myTable">
+			<thead>
+				<tr style="position: sticky; top: 0;background-color: white" class="header">
+					<th onclick="sortTable(0)"><b>Name</b></th>
+					<th onclick="sortTable(1)"><b>Position</b></th>
+					<th onclick="sortTable(2)"><b>Team</b></th>
+					<th onclick="sortTable(3)"><b>Opp</b></th>
+					<th onclick="sortTable(4)"><b>Prop Type</b></th>
+					<th onclick="sortTable(5)"><b>Prop Line</b></th>
+					<th onclick="sortTable(6)"><b>Over</b></th>
+					<th onclick="sortTable(7)"><b>Under</b></th>
+					<th onclick="sortTable(8)"><b>Last 10</b></th>
+					<th onclick="sortTable(9)"><b>Close L10</b></th>
+					<th onclick="sortTable(10)"><b>Proj</b></th>
+					<th onclick="sortTable(11)"><b>Diff</b></th>
+				</tr>
+			</thead>
+			<tbody>
+				{trs}
+			</tbody>
+		</table>
+	</body>
+		<script>sortTable(11)</script>
+</html>
